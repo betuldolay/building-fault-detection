@@ -1,0 +1,65 @@
+# The nightly rule engine run (design document, section 7.4). Applied by GitLab CI, not by Terraform.
+# Values in <angle brackets> come from the Terraform outputs.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-detection
+---
+# Acts as the Google service account "rule-engine" through Workload Identity: no key files.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rule-engine
+  namespace: fault-detection
+  annotations:
+    iam.gke.io/gcp-service-account: rule-engine@<project_id>.iam.gserviceaccount.com
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rule-engine-nightly
+  namespace: fault-detection
+spec:
+  schedule: "0 2 * * *"            # every night at 02:00
+  timeZone: Europe/Amsterdam
+  concurrencyPolicy: Forbid        # never two runs at the same time
+  startingDeadlineSeconds: 3600
+  jobTemplate:
+    spec:
+      # Split the buildings over pods: pod N evaluates the buildings whose shard is N.
+      # One pod is enough for ~200 buildings; raise both numbers when there are many more.
+      completionMode: Indexed
+      completions: 1
+      parallelism: 1
+      backoffLimit: 2              # a failed pod is retried; re-running is always safe
+      activeDeadlineSeconds: 14400 # stop after 4 hours, the next night covers the same days again
+      template:
+        spec:
+          serviceAccountName: rule-engine
+          restartPolicy: Never
+          initContainers:
+            # Cloud SQL Auth Proxy as a sidecar: private IP, logs in as the service account (no password).
+            - name: cloud-sql-proxy
+              image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.1
+              restartPolicy: Always   # native sidecar: stops when the main container finishes
+              args:
+                - --private-ip
+                - --auto-iam-authn
+                - --port=3306
+                - <mysql_connection_name>
+              resources:
+                requests: { cpu: 100m, memory: 128Mi }
+          containers:
+            - name: rule-engine
+              image: <image_repository>/rule-engine:<version>
+              env:
+                - name: EVALUATION_WINDOW
+                  value: P7D
+                - name: SHARD_COUNT
+                  value: "1"            # keep equal to completions
+                - name: READINGS_TABLE
+                  value: <readings_table>
+                - name: MYSQL_HOST
+                  value: 127.0.0.1
+              resources:
+                requests: { cpu: "1", memory: 2Gi }

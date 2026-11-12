@@ -1,0 +1,4 @@
+# Copy to terraform.tfvars and fill in. Example values only.
+project_id                = "fault-detection-dev"
+platform_readings_topic_id = "projects/iot-platform/topics/sensor-readings"
+deletion_protection       = false # dev only

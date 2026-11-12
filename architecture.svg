@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="1010" viewBox="0 0 820 1010"
+     font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6472"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect width="820" height="1010" fill="#ffffff"/>
+
+  <!-- ===== Source ===== -->
+  <rect x="330" y="24" width="200" height="44" rx="22" fill="#eef0f3" stroke="#9aa3ae"/>
+  <text x="430" y="51" text-anchor="middle" font-size="15" font-weight="600" fill="#2b3340">IoT data platform</text>
+
+  <line x1="385" y1="68" x2="385" y2="142" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="475" y1="68" x2="475" y2="142" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="372" y="98" text-anchor="end" font-size="12.5" fill="#2b3340" font-weight="600">write events</text>
+  <text x="372" y="115" text-anchor="end" font-size="12" fill="#5b6472">via Pub/Sub, every reading</text>
+  <text x="488" y="98" font-size="12.5" fill="#2b3340" font-weight="600">batch exports</text>
+  <text x="488" y="115" font-size="12" fill="#5b6472">history of new buildings</text>
+
+  <!-- ===== BigQuery ===== -->
+  <rect x="250" y="146" width="360" height="62" rx="10" fill="#e8f1fc" stroke="#4a86d1" stroke-width="1.5"/>
+  <text x="430" y="172" text-anchor="middle" font-size="16" font-weight="700" fill="#1f4f8a">BigQuery</text>
+  <text x="430" y="193" text-anchor="middle" font-size="12.5" fill="#2b3340">all readings, years of history</text>
+
+  <line x1="430" y1="208" x2="430" y2="262" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="442" y="240" font-size="12" fill="#5b6472">last 7 days, one read per building</text>
+
+  <!-- ===== Nightly job (container) ===== -->
+  <rect x="190" y="266" width="480" height="372" rx="14" fill="#fafbfc" stroke="#9aa3ae" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="212" y="292" font-size="14" font-weight="700" fill="#2b3340">Nightly job</text>
+  <text x="300" y="292" font-size="12.5" fill="#5b6472">Kubernetes · 02:00 · all buildings in parallel</text>
+
+  <!-- Rule engine -->
+  <rect x="215" y="308" width="430" height="190" rx="10" fill="#e9f7ef" stroke="#3a9d68" stroke-width="1.5"/>
+  <text x="430" y="334" text-anchor="middle" font-size="16" font-weight="700" fill="#1f6b44">Rule engine</text>
+
+  <g font-size="12.5" fill="#2b3340">
+    <rect x="240" y="350" width="380" height="28" rx="6" fill="#ffffff" stroke="#9fd3b6"/>
+    <text x="256" y="369"><tspan font-weight="700" fill="#1f6b44">1</tspan>   find each rule's sensors by tag</text>
+    <rect x="240" y="384" width="380" height="28" rx="6" fill="#ffffff" stroke="#9fd3b6"/>
+    <text x="256" y="403"><tspan font-weight="700" fill="#1f6b44">2</tspan>   fill gaps on a 5-minute grid</text>
+    <rect x="240" y="418" width="380" height="28" rx="6" fill="#ffffff" stroke="#9fd3b6"/>
+    <text x="256" y="437"><tspan font-weight="700" fill="#1f6b44">3</tspan>   ask each rule: is it faulty now?</text>
+    <rect x="240" y="452" width="380" height="28" rx="6" fill="#ffffff" stroke="#9fd3b6"/>
+    <text x="256" y="471"><tspan font-weight="700" fill="#1f6b44">4</tspan>   keep stretches of at least the minimum duration</text>
+  </g>
+
+  <line x1="430" y1="498" x2="430" y2="552" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="442" y="530" font-size="12" fill="#5b6472">signals</text>
+
+  <!-- Synthesis -->
+  <rect x="215" y="556" width="430" height="62" rx="10" fill="#f3eefb" stroke="#7d5bc4" stroke-width="1.5"/>
+  <text x="430" y="582" text-anchor="middle" font-size="16" font-weight="700" fill="#4f348a">Synthesis</text>
+  <text x="430" y="603" text-anchor="middle" font-size="12.5" fill="#2b3340">combine related signals into insights</text>
+
+  <!-- job -> MySQL -->
+  <line x1="430" y1="638" x2="430" y2="726" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+  <text x="442" y="668" font-size="12" fill="#5b6472">reads: equipment list, last values</text>
+  <text x="442" y="686" font-size="12" fill="#5b6472">writes: signals, insights, last values</text>
+
+  <!-- ===== MySQL ===== -->
+  <rect x="250" y="730" width="360" height="80" rx="10" fill="#fdf2e6" stroke="#d98b2b" stroke-width="1.5"/>
+  <text x="430" y="756" text-anchor="middle" font-size="16" font-weight="700" fill="#8a5212">MySQL</text>
+  <text x="430" y="777" text-anchor="middle" font-size="12.5" fill="#2b3340">equipment list, last values,</text>
+  <text x="430" y="795" text-anchor="middle" font-size="12.5" fill="#2b3340">signals, insights, audit log</text>
+
+  <line x1="430" y1="882" x2="430" y2="814" stroke="#5b6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- ===== API + UI ===== -->
+  <rect x="250" y="886" width="360" height="62" rx="10" fill="#eef0f3" stroke="#6b7685" stroke-width="1.5"/>
+  <text x="430" y="912" text-anchor="middle" font-size="16" font-weight="700" fill="#2b3340">Insights API + web UI</text>
+  <text x="430" y="933" text-anchor="middle" font-size="12.5" fill="#2b3340">see, assign and resolve insights</text>
+
+  <!-- ===== Part labels (left) ===== -->
+  <g font-size="12" font-weight="700" letter-spacing="1.2">
+    <rect x="28" y="390" width="118" height="28" rx="14" fill="#3a9d68"/>
+    <text x="87" y="409" text-anchor="middle" fill="#ffffff">DETECTION</text>
+    <line x1="146" y1="404" x2="213" y2="404" stroke="#3a9d68" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+    <rect x="28" y="573" width="118" height="28" rx="14" fill="#7d5bc4"/>
+    <text x="87" y="592" text-anchor="middle" fill="#ffffff">SYNTHESIS</text>
+    <line x1="146" y1="587" x2="213" y2="587" stroke="#7d5bc4" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+    <rect x="28" y="903" width="118" height="28" rx="14" fill="#6b7685"/>
+    <text x="87" y="922" text-anchor="middle" fill="#ffffff">FOLLOW-UP</text>
+    <line x1="146" y1="917" x2="248" y2="917" stroke="#6b7685" stroke-width="1.5" stroke-dasharray="3 3"/>
+  </g>
+
+  <!-- footer -->
+  <text x="430" y="988" text-anchor="middle" font-size="11.5" fill="#8a929d">Building Fault Detection · architecture</text>
+</svg>

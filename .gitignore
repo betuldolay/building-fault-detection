@@ -1,0 +1,13 @@
+# Build output
+target/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+
+# IDE and OS
+.idea/
+*.iml
+.DS_Store
